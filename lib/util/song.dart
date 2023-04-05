@@ -68,19 +68,28 @@ class SongWidget extends StatefulWidget {
     required this.song,
     required this.isPlaying,
     required this.isCurrentSong,
-    required this.service
+    required this.service,
+    required this.notifyParent,
   });
 
   final Song song;
   final bool isCurrentSong;
   final bool isPlaying;
   final AudioService service;
+  final Function() notifyParent;
 
   @override
   State<SongWidget> createState() => _SongWidgetState();
 }
 
 class _SongWidgetState extends State<SongWidget> {
+
+  void refresh() {
+    setState(() {
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -94,7 +103,15 @@ class _SongWidgetState extends State<SongWidget> {
                     icon: widget.isPlaying ?
                     const Icon(Icons.pause, color: Colors.white,) :
                     const Icon(Icons.play_arrow, color: Colors.white),
-                    onPressed: null,
+                    onPressed: () {
+                      if (widget.isPlaying) {
+                        widget.service.pause();
+                      } else {
+                        widget.service.resume();
+                      }
+                      widget.notifyParent();
+                      refresh();
+                    },
                     iconSize: 50,
                   ),
                 ) :
@@ -167,12 +184,14 @@ class AudioService {
 
   void resume() {
     _audioPlayer.resume();
+    _isPlaying = true;
   }
   void stop() {
     _audioPlayer.stop();
   }
   void pause() {
     _audioPlayer.pause();
+    _isPlaying = false;
   }
 
   int get currentIndex => _currentIndex;

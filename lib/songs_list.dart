@@ -46,12 +46,23 @@ class _SongsPageState extends State<SongsPage> {
                 itemCount: songs.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: SongWidget(song: songs[index], isPlaying: widget.service.isPlaying(), isCurrentSong: index == widget.service.currentIndex, service: widget.service,),
+                    title: SongWidget(
+                      song: songs[index],
+                      isPlaying: widget.service.isPlaying(),
+                      isCurrentSong: index == widget.service.currentIndex,
+                      service: widget.service,
+                      notifyParent: refresh,
+                    ),
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SongPlayer(songs: songs, index: index, service: widget.service, notifyParent: refresh,)
+                              builder: (context) => SongPlayer(
+                                songs: songs,
+                                index: index,
+                                service: widget.service,
+                                notifyParent: refresh,
+                              )
                           )
                       );
                     },
@@ -66,12 +77,14 @@ class _SongsPageState extends State<SongsPage> {
     );
   }
   refresh() {
-    setState(() {});
+    setState(() {
+      print('----------------------------------------------------------------------------------------------------------');
+      print(widget.service.isPlaying());
+    });
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 }
