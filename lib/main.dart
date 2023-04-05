@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:music_player_midterm/songs_list.dart';
 import 'package:music_player_midterm/util/song.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -19,6 +21,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: 'OpenSans',
       ),
       home: SongsPage(service: AudioService(),),
     );

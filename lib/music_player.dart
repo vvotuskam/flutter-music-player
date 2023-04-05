@@ -4,10 +4,12 @@ import 'package:music_player_midterm/util/song.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 class SongPlayer extends StatefulWidget {
-  SongPlayer({super.key, required this.songs, required this.index, required this.service});
+  SongPlayer({super.key, required this.songs, required this.index, required this.service, required this.notifyParent});
   final List<Song> songs;
   int index;
   final AudioService service;
+  final Function() notifyParent;
+
 
   @override
   State<SongPlayer> createState() => _SongPlayerState();
@@ -47,6 +49,9 @@ class _SongPlayerState extends State<SongPlayer> {
 
     setAudio();
 
+    if (!mounted) {
+      return;
+    }
     widget.service.audioPlayer.onPlayerStateChanged.listen((event) {
       setState(() {
         isPlaying = event == PlayerState.PLAYING;
@@ -85,14 +90,32 @@ class _SongPlayerState extends State<SongPlayer> {
     Song song = widget.songs[widget.index];
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(song.name),
-      ),
+      // appBar: AppBar(
+      //   title: Text(song.name),
+      // ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    widget.notifyParent();
+                    Navigator.pop(context, true);
+                  },
+                  child: const Icon(
+                      Icons.arrow_back,
+                      size: 24,
+                      weight: 50.0,
+
+
+                  ),
+                ),
+              ],
+            ),
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image(image: AssetImage(song.imageName),
@@ -201,14 +224,15 @@ class _SongPlayerState extends State<SongPlayer> {
       ),
     );
   }
-
   @override
   void dispose() {
     super.dispose();
-    MaterialPageRoute(
-        builder: (context) => SongsPage(
-          service: widget.service,
-        )
-    );
+    //widget.notifyParent();
+    // Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //         builder: (context) => SongsPage(service: widget.service,)
+    //     )
+    // );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:music_player_midterm/util/song.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:provider/provider.dart';
+
 
 import 'music_player.dart';
 
@@ -13,7 +15,7 @@ class SongsPage extends StatefulWidget {
   // AudioPlayer audioPlayer;
 
   SongsPage({super.key, required this.service});
-  final AudioService service;
+  AudioService service;
 
 
   @override
@@ -22,9 +24,9 @@ class SongsPage extends StatefulWidget {
 
 class _SongsPageState extends State<SongsPage> {
   List<Song> songs = [
-    Song("Song name 1", "Album name 1", "artistName 1", "assets/cover1.jpg", "song1.mp3"),
-    Song("Song name 2", "Album name 2", "artistName 2", "assets/cover2.jpg", "song2.mp3"),
-    Song("Song name 3", "Album name 3", "artistName 3", "assets/cover3.jpg", "song3.mp3"),
+    Song("Той жыры", "Дос Мукасан", "Дос Мукасан", "assets/cover1.jpg", "song1.mp3"),
+    Song("Without me", "Theatre", "Eminem", "assets/cover2.jpg", "song2.mp3"),
+    Song("My Universe", "Universe", "Kairat Nurtas", "assets/cover3.jpg", "song3.mp3"),
   ];
 
   @override
@@ -35,21 +37,21 @@ class _SongsPageState extends State<SongsPage> {
       home: Scaffold(
         appBar: AppBar(
           title: const Text("Music List"),
-          automaticallyImplyLeading: true,
         ),
         body: Column(
           children: [
+            const SizedBox(height: 15,),
             Expanded(
               child: ListView.builder(
                 itemCount: songs.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: SongWidget(song: songs[index],),
+                    title: SongWidget(song: songs[index], isPlaying: widget.service.isPlaying(), isCurrentSong: index == widget.service.currentIndex, service: widget.service,),
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SongPlayer(songs: songs, index: index, service: widget.service,)
+                              builder: (context) => SongPlayer(songs: songs, index: index, service: widget.service, notifyParent: refresh,)
                           )
                       );
                     },
@@ -57,14 +59,19 @@ class _SongsPageState extends State<SongsPage> {
                 },
               ),
             ),
-            Visibility(
-              visible: widget.service.currentIndex != -1,
-              child: Text(songs[widget.service.currentIndex != -1 ? widget.service.currentIndex : 0].name),
-            )
           ],
         )
 
       ),
     );
+  }
+  refresh() {
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 }
